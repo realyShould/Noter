@@ -10,6 +10,7 @@ class mywindow(QtWidgets.QMainWindow):
         super(mywindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.fname = ''
         # connects
         self.ui.actionNew.triggered.connect(self.btnNewClicked)
         self.ui.actionOpen.triggered.connect(self.btnOpenClicked)
@@ -25,18 +26,22 @@ class mywindow(QtWidgets.QMainWindow):
             text = fil.read()
             self.ui.textEdit.setText(text)
     def btnSaveClicked(self):
-        text = self.textEdit.toPlainText()
-        with open(self.fname, 'w+') as fil:
-            fil.write(text)
+        if self.fname == '':
+            self.btnSaveAsClicked()
+        else:
+            text = self.ui.textEdit.toPlainText()
+            with open(self.fname, 'w+') as fil:
+                fil.write(text)
+        self.fname = ''
 
     def btnSaveAsClicked(self):
-        text = self.textEdit.toPlainText()
-        saPath = QFileDialog.getSaveFileName(self, 'Save as file', '')[0]
+        text = self.ui.textEdit.toPlainText()
+        self.fname = QFileDialog.getSaveFileName(self, 'Save as file', '')[0]
         with open(saPath, 'w+') as fil:
             fil.write(text)
 
     def quitClicked(self):
-        sys.exit(app.exec())
+        quit()
 
 app = QtWidgets.QApplication([])
 application = mywindow()
